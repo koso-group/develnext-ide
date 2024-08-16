@@ -91,7 +91,8 @@ class SharedProjectDetailForm extends AbstractOnlineIdeForm
 
     public function update(array $data)
     {
-        $data['canWrite'] = $data['owner'] == Ide::accountManager()->getAccountData()['id'];
+        if($data['owner'] == Ide::accountManager()->getAccountData()['id'])
+            $data['canWrite'] = true;        
         
         $this->data = $data;
 
