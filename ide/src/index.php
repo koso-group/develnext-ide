@@ -103,8 +103,8 @@ function ico($name)
         switch ($type) {
             case "fa":
                 return new \php\gui\icons\UXFontAwesomeIcon($name, $size, $color);
-            case "525":
-                return new \php\gui\icons\UXIcons525Icon($name, $size, $color);
+            //case "525":
+            //    return new \php\gui\icons\UXIcons525Icon($name, $size, $color);
         }
 
         return null;

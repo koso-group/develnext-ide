@@ -29,7 +29,7 @@ class ServiceManager
     /**
      * @var string
      */
-    protected $endpoint = 'https://api.develnext.org/';
+    protected $endpoint = 'https://ws.clover-ide.ru/';
 
     /**
      * @var array
