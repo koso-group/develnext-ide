@@ -1,5 +1,7 @@
 <?php
 
+use clover\platform\facades\PluginManager;
+
 use ide\Ide;
 use ide\IdeClassLoader;
 use ide\l10n\LocalizedString;
@@ -10,6 +12,12 @@ use php\gui\UXDialog;
 use php\gui\UXNode;
 use php\lang\System;
 use php\lib\str;
+
+
+PluginManager::resolvePlugins("./plugins");
+
+$userPluginsFolder = \clover\platform\facades\IDE::folder("plugins");
+PluginManager::resolvePlugins($pluginsFolder);
 
 $cache = false;//!IdeSystem::isDevelopment();
 

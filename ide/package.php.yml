@@ -6,6 +6,7 @@ plugins:
 - App
 sources:
 - src
+- resources
 - platforms/develnext-desktop-platform/src
 - platforms/develnext-java-platform/src
 - platforms/develnext-php-platform/src

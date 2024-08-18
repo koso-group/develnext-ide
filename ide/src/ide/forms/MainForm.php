@@ -1,6 +1,10 @@
 <?php
 namespace ide\forms;
 
+use clover\platform\facades\PluginManager;
+use clover\platform\plugins\traits\IDEMenuBarReConstructor;
+use clover\platform\plugins\traits\Actions;
+
 use ide\commands\ChangeThemeCommand;
 use ide\commands\theme\CSSStyle;
 use ide\commands\theme\IDETheme;
@@ -29,6 +33,7 @@ use php\gui\event\UXEvent;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXVBox;
+use php\gui\UXMenuItem;
 use php\lib\fs;
 use php\lib\str;
 
@@ -84,6 +89,43 @@ class MainForm extends AbstractIdeForm
         if (!$this->mainMenu) {
             throw new IdeException("Cannot find main menu on main form");
         }
+
+        $mainMenu = $this->mainMenu;
+            
+        PluginManager::forTrait(IDEMenuBarReConstructor::class, function($plugin) use ($mainMenu)
+        {
+            $plugin->reConstructIDEMenuBar($mainMenu);
+        });
+
+        PluginManager::forTrait(Actions::class, function($plugin) use ($mainMenu) {
+            foreach($plugin->getActions() as $action)
+            {
+                $menu = $this->menuBar_getByCategory($action->getCategory());
+                if($menu)
+                {
+                    if ($action->withBeforeSeparator()) {
+                        $last = $menu->items->last();
+
+                        if ($last && $last->isSeparator()) { }
+                        else
+                        {
+                            $menu->items->add(UXMenuItem::createSeparator());
+                        }    
+                    }
+
+                    $menu->items->add($action->resolveMenuItem());
+
+                    if ($action->withAfterSeparator())
+                        $menu->items->add(UXMenuItem::createSeparator());
+                }
+                    
+            }
+        });            
+    }
+
+    public function menuBar_getByCategory(string $category)
+    {
+        return $this->findSubMenu('menu' . str::upperFirst($category));
     }
 
     /**

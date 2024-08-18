@@ -1,5 +1,9 @@
 <?php
 namespace ide\project;
+
+use clover\platform\facades\PluginManager;
+use clover\platform\plugins\traits\FileTypes;
+
 use ide\commands\tree\TreeCopyPathCommand;
 use ide\commands\tree\TreeCreateDirectoryCommand;
 use ide\commands\tree\TreeCreateFileCommand;
@@ -22,6 +26,8 @@ use php\gui\designer\UXFileDirectoryTreeSource;
 use php\gui\event\UXDragEvent;
 use php\gui\event\UXMouseEvent;
 use php\gui\UXDesktop;
+use php\gui\UXImage;
+use php\gui\UXImageView;
 use php\io\File;
 use php\lang\Process;
 use php\lib\fs;
@@ -402,6 +408,38 @@ class ProjectTree
         }
 
         $source->addValueCreator(function ($path, File $file) use ($ide) {
+            if ($file->isDirectory()) {
+                $folderNames = explode("\\", $file->getPath());
+                $folderName = array_pop($folderNames);
+                
+
+                if ($folderName == "src_generated") return new UXDirectoryTreeValue($path, fs::name($path), fs::name($path), new UXImageView(new UXImage('res://expui/icons/excludeRoot_dark.png')), null, $file->isDirectory());
+                if ($folderName == "src") return new UXDirectoryTreeValue($path, fs::name($path), fs::name($path), new UXImageView(new UXImage('res://expui/icons/sourceRoot_dark.png')), null, $file->isDirectory());
+                if ($folderName == "resources") return new UXDirectoryTreeValue($path, fs::name($path), fs::name($path), new UXImageView(new UXImage('res://expui/icons/resourcesRoot_dark.png')), null, $file->isDirectory());
+
+                if ($folderName == "vendor") return new UXDirectoryTreeValue($path, fs::name($path), fs::name($path), new UXImageView(new UXImage('res://expui/icons/flattenModules_dark.png')), null, $file->isDirectory());
+
+
+                $folderName = array_pop($folderNames);
+
+                if ($folderName == "vendor") return new UXDirectoryTreeValue($path, fs::name($path), fs::name($path), new UXImageView(new UXImage('res://expui/icons/module_dark.png')), null, $file->isDirectory());
+
+
+
+                return new UXDirectoryTreeValue($path, fs::name($path), fs::name($path), new UXImageView(new UXImage('res://expui/icons/folder_dark.png')), null, $file->isDirectory());
+            }
+            // if dir == ".dn" ret new Icon(dn);
+
+            foreach(PluginManager::forTrait(FileTypes::class) as $plugin)
+            {
+                foreach($plugin->getFileTypes() as $fileType)
+                {
+                    if($fileType->validate($file))
+                        return new UXDirectoryTreeValue($path, fs::name($path), fs::name($path), new UXImageView($fileType->getIcon()), null, $file->isDirectory());
+
+                }
+            }
+            
             $format = $ide->getFormat($file);
 
             if ($format) {
