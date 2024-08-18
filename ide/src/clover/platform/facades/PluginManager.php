@@ -21,10 +21,12 @@ final class PluginManager
 
     public static function resolvePlugins($pluginsPath)
     {
+        if($pluginsPath instanceof File){}
+        else $pluginsPath = new File($pluginsPath);
 
-        static::$__pluginStore = [];
+        //static::$__pluginStore = [];
 
-        foreach ((new File($pluginsPath))->findFiles() as $plugin) {
+        foreach (($pluginsPath)->findFiles() as $plugin) {
             
             try
             {
