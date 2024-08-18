@@ -15,13 +15,19 @@ class IDE
     {
         $ideHome = File::of(implode('/', [
             System::getProperty('user.home'),
-            "DevelNextCE"
+            ".DevelNextCE"
         ]));
-
+        
         if (!$ideHome->isDirectory()) {
             $ideHome->mkdirs();
         }
+        
+        $folderPath = File::of(implode('/', [$ideHome, $folderPath]));
+        if(!$folderPath->isDirectory())
+        {
+            $folderPath->mkdirs();
+        }
 
-        return File::of(implode('/', [$ideHome, $folderPath]));
+        return $folderPath;
     }
 }
