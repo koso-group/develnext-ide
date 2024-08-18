@@ -17,7 +17,7 @@ use php\lib\str;
 PluginManager::resolvePlugins("./plugins");
 
 $userPluginsFolder = \clover\platform\facades\IDE::folder("plugins");
-PluginManager::resolvePlugins($pluginsFolder);
+PluginManager::resolvePlugins($userPluginsFolder);
 
 $cache = false;//!IdeSystem::isDevelopment();
 
