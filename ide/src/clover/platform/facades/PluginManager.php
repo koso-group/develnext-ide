@@ -17,6 +17,7 @@ final class PluginManager
         if(DIRECTORY_SEPARATOR == '\\') return $classPath;
         return implode(DIRECTORY_SEPARATOR, explode('\\', $classPath));
     }
+    protected static $__plugins = [];
     protected static $__pluginStore = [];
 
     public static function resolvePlugins($pluginsPath)
@@ -54,6 +55,7 @@ final class PluginManager
                 }
         
                 $pluginClass = include(self::__pathNormalize($pluginPath));
+                static::$__plugins[$pluginPath] = $pluginClass;
                 
                 $reflection = new ReflectionClass($pluginClass);
                 foreach($reflection->getTraits() as $reflectionClass)
@@ -85,5 +87,20 @@ final class PluginManager
                 $closure($plugin);
         
         return $plugins;
+    }
+
+    public static function resourceFile(string $pluginName, string $filePath) : File
+    {
+        foreach(static::$__plugins as $path => $plugin)
+        {
+            if($plugin->getName() == $pluginName)
+            {
+                $path = explode('plugin.php', $path);
+                array_pop($path);
+                $path = implode('', $path);
+
+                return new File(implode('/', [ $path, 'res', $filePath]));
+            }
+        }
     }
 }
