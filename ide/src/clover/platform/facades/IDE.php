@@ -6,12 +6,18 @@ use php\lang\System;
 
 class IDE
 {
-    public static function file($filePath)
+    public static function file($filePath) : File
     {
-        return static::folder($filePath);        
+        $filePaths = explode('/', $filePath);
+        $fileName = array_pop($filePaths);
+        $filePath = implode('/', $filePaths);
+
+        $filePath = static::folder($filePath);        
+
+        return File::of(implode('/', [$filePath, $fileName]));
     }
 
-    public static function folder($folderPath)
+    public static function folder($folderPath) : File
     {
         $ideHome = File::of(implode('/', [
             System::getProperty('user.home'),
