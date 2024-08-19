@@ -2,6 +2,9 @@
 
 namespace clover\platform\plugins;
 
+use clover\platform\facades\PluginManager;
+use php\io\File;
+
 abstract class CloverPlugin 
 {
     abstract public function getName(): string;
@@ -26,5 +29,14 @@ abstract class CloverPlugin
     public function getDependencies(): array
     {
         return [];
+    }
+
+    public static function resourceFile(string $filePath) : File
+    {
+        $pluginInstance = (new static());
+        $pluginName = $pluginInstance->getName();
+        unset($pluginInstance);
+
+        return PluginManager::resourceFile($pluginName, $filePath);
     }
 }
