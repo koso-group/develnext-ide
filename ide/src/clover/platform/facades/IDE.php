@@ -6,6 +6,8 @@ use php\lang\System;
 
 class IDE
 {
+    public static bool $requiredReboot = false;
+    
     public static function file($filePath) : File
     {
         $filePaths = explode('/', $filePath);
