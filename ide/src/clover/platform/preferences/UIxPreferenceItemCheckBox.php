@@ -1,10 +1,7 @@
 <?php
 namespace clover\platform\preferences;
 
-use ide\ui\elements\DNButton;
 use ide\ui\elements\DNCheckbox;
-use ide\ui\elements\DNLabel;
-use php\gui\layout\UXHBox;
 
 class UIxPreferenceItemCheckBox extends UIxPreferenceItemHBox
 {
@@ -25,5 +22,10 @@ class UIxPreferenceItemCheckBox extends UIxPreferenceItemHBox
     {
         $this->__item->on('action', $closure);
         return $this;
+    }
+
+    public function getValue() : bool
+    {
+        return $this->__item->selected;
     }
 }

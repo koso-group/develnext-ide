@@ -1,10 +1,7 @@
 <?php
 namespace clover\platform\preferences;
 
-use ide\ui\elements\DNButton;
-use ide\ui\elements\DNLabel;
 use ide\ui\elements\DNTextField;
-use php\gui\layout\UXHBox;
 
 class UIxPreferenceItemTextField extends UIxPreferenceAbstractItem
 {   
@@ -19,5 +16,10 @@ class UIxPreferenceItemTextField extends UIxPreferenceAbstractItem
     {
         $this->__item->observer('text')->addListener($closure);
         return $this;
+    }
+
+    public function getValue()
+    {
+        return $this->__item->text;
     }
 }
