@@ -1,6 +1,8 @@
 <?php
 namespace ide\forms;
 
+use clover\platform\facades\ThemeManager;
+use clover\platform\themes\Theme;
 use ide\Ide;
 use ide\Logger;
 use ide\ui\elements\DNAnchorPane;
@@ -58,7 +60,6 @@ class AbstractIdeForm extends AbstractForm
         $this->title = _($this->title);
         _($this->layout);
 
-        $this->addStylesheet("/.theme/style.css");
-        DNAnchorPane::applyIDETheme($this->layout);
+        ThemeManager::currentTheme()->apply($this);
     }
 }

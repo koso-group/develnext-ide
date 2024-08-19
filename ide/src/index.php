@@ -1,7 +1,7 @@
 <?php
 
 use clover\platform\facades\PluginManager;
-
+use clover\platform\facades\ThemeManager;
 use ide\Ide;
 use ide\IdeClassLoader;
 use ide\l10n\LocalizedString;
@@ -35,6 +35,9 @@ IdeSystem::setLoader($loader);
 if (!IdeSystem::isDevelopment()) {
     Logger::setLevel(Logger::LEVEL_INFO);
 }
+
+
+ThemeManager::applyTheme(ThemeManager::currentTheme());
 
 $app = new Ide();
 $app->addStyle('/.theme/style.css');
