@@ -272,7 +272,7 @@ abstract class AbstractService
                     case 'POST':
                     case 'PUT':
                     case 'PATCH':
-                        $connection->getOutputStream()->write(Json::encode($json));
+                        $connection->getOutputStream()->write(json_encode($json, JSON_UNESCAPED_UNICODE));
                         break;
                 }
 

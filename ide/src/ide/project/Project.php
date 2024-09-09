@@ -1148,6 +1148,10 @@ class Project
         if ($gitIgnoreFile->exists()) {
             $exporter->addFile($gitIgnoreFile);
         }
+        
+        $packageYmlFile = $this->getFile('package.php.yml');
+        if ($packageYmlFile->exists())
+            $exporter->addFile($packageYmlFile);       
 
         $exporter->removeFile($this->indexer->getIndexFile());
         $exporter->removeFile($this->getIdeLibraryConfig());
