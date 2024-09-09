@@ -69,7 +69,7 @@ class ShareProjectArea extends AbstractFormArea
                 $this->content->add($this->_syncPane);
 
                 $this->updatedAtLabel->text = TimeUtils::getUpdateAt($data['updatedAt']);
-                $this->setUrl('https://hub.develnext.org/project/' . $data['uid']);
+                $this->setUrl($data['sharedUrl']);
             } else {
                 $this->content->add($this->_nonSyncPane);
             }
@@ -118,7 +118,7 @@ class ShareProjectArea extends AbstractFormArea
         $project = Ide::project();
         $project->save();
 
-        $this->showPreloader('message.uploading.project.to.hub::Загружаем проект на hub.develnext.org ...');
+        $this->showPreloader('message.uploading.project.to.hub::Загружаем проект на Hub DevelNext ...');
 
         $file = Ide::get()->createTempFile('.zip');
 
@@ -140,7 +140,7 @@ class ShareProjectArea extends AbstractFormArea
                         uiLater(function () {
                             Notifications::show(
                                 'common.changes.uploaded::Изменения загружены',
-                                'message.project.was.successful.uploaded.to.hub::Измненения в проекте были успешно загружены на hub.develnext.org');
+                                'message.project.was.successful.uploaded.to.hub::Измненения в проекте были успешно загружены на Hub DevelNext');
                         });
                     }
                 } else {
@@ -191,7 +191,7 @@ class ShareProjectArea extends AbstractFormArea
      */
     public function doReUploadButtonAction()
     {
-        if (!MessageBoxForm::confirm('message.confirm.to.upload.project.changes.to.hub::Вы точно хотите загрузить изменения в проекте на develnext.org?', $this)) {
+        if (!MessageBoxForm::confirm('message.confirm.to.upload.project.changes.to.hub::Вы точно хотите загрузить изменения в проекте на DevelNext Hub?', $this)) {
             return;
         }
 
@@ -233,7 +233,7 @@ class ShareProjectArea extends AbstractFormArea
             return;
         }
 
-        if (!MessageBoxForm::confirm('message.confirm.to.upload.project.to.hub::Вы точно хотите загрузить проект на develnext.org?', $this)) {
+        if (!MessageBoxForm::confirm('message.confirm.to.upload.project.to.hub::Вы точно хотите загрузить проект на DevelNext Hub?', $this)) {
             return;
         }
 
@@ -245,7 +245,7 @@ class ShareProjectArea extends AbstractFormArea
 
         $project->export($file);
 
-        $this->showPreloader('message.uploading.project.to.hub::Загружаем проект на hub.develnext.org ...');
+        $this->showPreloader('message.uploading.project.to.hub::Загружаем проект на Hub DevelNext ...');
 
         $failedCallback = function (ServiceResponse $response) {
             if ($response->isConflict()) {

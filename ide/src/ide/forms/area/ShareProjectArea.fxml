@@ -21,7 +21,7 @@
                                 <String fx:value="flat-button" />
                             </styleClass>
                         </Button>
-                        <Label text="share.about.hub.text::Вы можете загрузить проект на develnext.org и поделиться ссылкой на него" textFill="#616161" />
+                        <Label text="share.about.hub.text::Вы можете загрузить проект на DevelNext Hub и поделиться ссылкой на него" textFill="#616161" />
                     </children>
                 </HBox>
                 <VBox id="syncPane" spacing="10.0">

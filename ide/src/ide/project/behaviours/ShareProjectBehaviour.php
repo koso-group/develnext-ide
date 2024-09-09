@@ -108,17 +108,14 @@ class ShareProjectBehaviour extends AbstractProjectBehaviour
         $title = _(new UXLabel('share.sync.with.hub::Синхронизация с'));
         $title->font = $title->font->withBold();
 
-        $colon = new UXLabel(': ');
+        $colon = new UXLabel('DevelNext Hub:');
         $colon->font = $colon->font->withBold();
 
         $url = new URL(Ide::service()->getEndpoint());
 
-        $link = new UXHyperlink('hub.develnext.org');
-        $link->on('action', function () use ($url) {
-            browse('https://hub.develnext.org');
-        });
+       
 
-        $titleFlow = new UXHBox([$title, new UXLabel(' '), $link, $colon]);
+        $titleFlow = new UXHBox([$title, new UXLabel(' '), $colon]);
 
         $this->uiAuthPane = $authPane = new NeedAuthPane();
         $authPane->setTitle('share.sync.not.available::Синхронизация недоступна');
