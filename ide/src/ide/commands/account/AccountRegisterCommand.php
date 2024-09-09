@@ -1,6 +1,7 @@
 <?php
 namespace ide\commands\account;
 
+use ide\editors\AbstractEditor;
 use ide\forms\MessageBoxForm;
 use ide\forms\RegisterForm;
 use ide\Ide;
@@ -18,7 +19,7 @@ class AccountRegisterCommand extends AbstractCommand
         return 'account';
     }
 
-    public function onExecute()
+    public function onExecute($e = null, AbstractEditor $editor = null)
     {
         $dialog = new RegisterForm();
         $dialog->showAndWait();

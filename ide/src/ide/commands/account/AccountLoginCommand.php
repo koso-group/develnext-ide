@@ -1,6 +1,7 @@
 <?php
 namespace ide\commands\account;
 
+use ide\editors\AbstractEditor;
 use ide\forms\MessageBoxForm;
 use ide\Ide;
 use ide\misc\AbstractCommand;
@@ -23,7 +24,7 @@ class AccountLoginCommand extends AbstractCommand
 
 
 
-    public function onExecute()
+    public function onExecute($e = null, AbstractEditor $editor = null)
     {
         Ide::accountManager()->authorize(true);
     }
