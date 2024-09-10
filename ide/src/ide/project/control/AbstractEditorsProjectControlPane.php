@@ -167,7 +167,7 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
      */
     protected function makeItemUi($item)
     {
-        $imageBox = new ImageBox(80, 48);
+        $imageBox = new ImageBox(48, 48);
         $imageBox->userData = $item;
         $image = Ide::get()->getImage($this->getBigIcon($item));
 

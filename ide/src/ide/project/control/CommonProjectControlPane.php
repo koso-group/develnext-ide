@@ -3,9 +3,13 @@ namespace ide\project\control;
 use ide\forms\InputMessageBoxForm;
 use ide\systems\FileSystem;
 use php\gui\layout\UXScrollPane;
+use php\gui\UXImage;
+use php\gui\UXImageView;
 use php\gui\UXNode;
 use php\gui\UXLoader;
 use php\gui\framework\AbstractForm;
+use php\io\IOException;
+use php\io\MemoryStream;
 use php\io\Stream;
 use php\gui\framework\EventBinder;
 use php\gui\layout\UXVBox;
@@ -19,7 +23,9 @@ use php\gui\UXSeparator;
 use php\gui\UXDialog;
 use ide\utils\FileUtils;
 use php\gui\UXDesktop;
+use php\lang\Thread;
 use php\util\Regex;
+use script\FileChooserScript;
 
 /**
  * Class CommonProjectControlPane
@@ -36,6 +42,11 @@ class CommonProjectControlPane extends AbstractProjectControlPane
      * @var UXLabel
      */
     protected $projectNameLabel;
+
+    /**
+     * @var UXImageView
+     */
+    protected $iconImageView;
 
     /**
      * @var UXLabel
@@ -64,6 +75,7 @@ class CommonProjectControlPane extends AbstractProjectControlPane
 
     /**
      * @return UXNode
+     *
      */
     public function makeUi()
     {
@@ -81,6 +93,14 @@ class CommonProjectControlPane extends AbstractProjectControlPane
         $this->content = $ui->lookup('#content');
         $this->projectNameLabel = $ui->lookup('#projectNameLabel');
         $this->projectDirLabel = $ui->lookup('#projectDirLabel');
+        $this->iconImageView = $ui->lookup("#iconImageView");
+
+        Ide::get()->getOpenedProject()->getTemplate()->setPathProject(Ide::get()->getOpenedProject()->getRootDir());
+        $UXImage = Ide::get()->getOpenedProject()->getTemplate()->getIcon32();
+
+        $this->iconImageView->image = $UXImage;
+
+
 
         $pane = new UXScrollPane($ui);
         $pane->padding = 0;
@@ -188,4 +208,40 @@ class CommonProjectControlPane extends AbstractProjectControlPane
         $desktop = new UXDesktop();
         $desktop->open(Ide::project()->getRootDir());
     }
+
+    /**
+     * @event selectIconButton.action
+     */
+    public function doSelectIconButton()
+    {
+        $fileChooser = new FileChooserScript();
+        //to-do add check ext
+        $file = $fileChooser->execute();
+
+        if ($file != null){
+            (new Thread(function () use ($file) {
+                $byte = file_get_contents($file->getAbsolutePath());
+                $base64 = base64_encode($byte);
+
+                $configProject = Ide::get()->getOpenedProject()->getConfig();
+                $configProject->setIconProjectBase64($base64);
+                $configProject->save();
+                $mem = new MemoryStream();
+                $mem->write($byte);
+                $mem->seek(0);
+                $image = new UXImage($mem);
+
+
+                    $this->iconImageView->image = $image;
+
+
+            }))->start();
+
+
+        }else{
+            UXDialog::showAndWait("Невозможно установить иконку для проекта", 'ERROR');
+        }
+
+    }
+
 }

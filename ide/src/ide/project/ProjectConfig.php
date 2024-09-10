@@ -252,6 +252,19 @@ class ProjectConfig
     }
 
     /**
+     * @return string
+     */
+    public function getIconProjectBase64()
+    {
+        return $this->getProperty('iconProject');
+    }
+
+    public function setIconProjectBase64(string $base64)
+    {
+        $this->setProperty("iconProject", $base64);
+    }
+
+    /**
      * @return AbstractProjectTemplate
      */
     public function getTemplate()
@@ -489,7 +502,7 @@ class ProjectConfig
 
             $project->setAttribute('author', System::getProperty('user.name'));
             $project->setAttribute('authorOS', System::getProperty('os.name'));
-
+            $this->setIconProjectBase64($this->getIconProjectBase64());
             $project->setAttribute('createdAt', Time::millis());
         }
 

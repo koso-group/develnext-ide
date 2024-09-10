@@ -30,9 +30,9 @@ class PhpProjectTemplate extends AbstractProjectTemplate
         return "Проект с исходниками в виде php файлов";
     }
 
-    public function getIcon32()
+    public function getIcon()
     {
-        return "icons/phpProject32.png";
+        return "res://.data/img/icons/phpProject32.png";
     }
 
     public function openProject(Project $project)
