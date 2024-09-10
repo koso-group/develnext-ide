@@ -13,6 +13,7 @@ use php\gui\UXNode;
 use php\lang\System;
 use php\lib\str;
 
+\kosogroup\clover\track\CloverTrack::init("eyJpbnRlZ3JhdGlvbklkIjoiZTViZjg1YzUtNDU4Ni00OTNmLWIzMDYtYjI4NDI2ZjcxYmM2Iiwic2VjcmV0IjoiNzA3Mzk2YjAtMWQ4Mi00ODg3LTljYzktOWMxZWU4NzkyZjA1In0=");
 
 PluginManager::resolvePlugins("./plugins");
 

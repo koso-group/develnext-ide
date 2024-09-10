@@ -199,7 +199,7 @@ class Ide extends Application
         $this->asyncThreadPool = ThreadPool::createCached();
     }
 
-    public function launch()
+    public function launch(callable $handler = null, callable $after = null)
     {
         parent::launch(
             function () {
@@ -207,62 +207,6 @@ class Ide extends Application
                 Logger::reset();
                 Logger::info("Start IDE, mode = $this->mode, os = $this->OS, version = {$this->getVersion()}");
                 Logger::info(str::format("Commands Args = [%s]", str::join((array)$GLOBALS['argv'], ', ')));
-
-                restore_exception_handler();
-
-                set_exception_handler(function ($e) {
-                    static $showError;
-
-                    if ($e instanceof JSException) {
-                        echo $e->getTraceAsString();
-                        return;
-                    }
-
-                    Logger::exception($e->getMessage(), $e);
-
-                    if (!$showError) {
-                        $showError = true;
-                        $notify = Notifications::error('error.unknown.title', 'error.unknown.message');
-
-                        $notify->on('click', function () use ($e) {
-                            $dialog = new UXAlert('ERROR');
-                            $dialog->title = _('error.title');
-                            $dialog->headerText = _('error.unknown.help.text');
-                            $dialog->contentText = $e->getMessage();
-                            $dialog->setButtonTypes([_('btn.exit.dn'), _('btn.resume')]);
-                            $pane = new UXAnchorPane();
-                            $pane->maxWidth = 100000;
-
-                            $class = get_class($e);
-
-                            $content = new UXTextArea("{$class}\n{$e->getMessage()}\n\n"
-                                . _("error.in.file", $e->getFile())
-                                . "\n\t-> " . _("error.at.line", $e->getLine()) . "\n\n" . $e->getTraceAsString());
-
-
-                            $content->padding = 10;
-                            UXAnchorPane::setAnchor($content, 0);
-                            $pane->add($content);
-                            $dialog->expandableContent = $pane;
-                            $dialog->expanded = true;
-                            switch ($dialog->showAndWait()) {
-                                case _('btn.exit.dn'):
-                                    Ide::get()->shutdown();
-                                    break;
-                            }
-                        });
-
-                        $this->sendError($e);
-
-                        $notify->on('hide', function () use (&$showError) {
-                            $showError = false;
-                        });
-                    }
-                });
-
-                if ($this->isDevelopment()) {
-                    restore_exception_handler();
-                }
 
                 $this->readLanguages();
 
@@ -299,6 +243,18 @@ class Ide extends Application
                 $this->serviceManager->updateStatus();
 
                 $this->accountManager = new AccountManager();
+
+                $this->accountManager()->on('update', function ($data) {
+                    \kosogroup\clover\track\CloverTrack::deployUserData([
+                        'name' => $data['name'],
+                        'id' => $data['id'],
+                    ]);
+                    \kosogroup\clover\track\CloverTrack::fillRelease(implode('::', [$this->getVersion(), $this->getVersionHash()]));
+                    \kosogroup\clover\track\CloverTrack::fillContext([
+                        'version' => $this->getVersion(),
+                        'biuld' => $this->getVersionHash(),
+                    ]);
+                }, __CLASS__);
 
                 $this->registerAll();
 
@@ -1467,7 +1423,7 @@ class Ide extends Application
     /**
      * @return ServiceManager
      */
-    public static function service()
+    public static function service() : ServiceManager
     {
         return Ide::get()->serviceManager;
     }

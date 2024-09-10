@@ -45,6 +45,7 @@ deps:
   develnext-designer: ^1.0.0
   develnext-gui-tabs-ext: ^2.0.0
 
+  clover-track: "*"
 
 depsWin:
   jphp-gui-jfx-win: ^14.0.0
