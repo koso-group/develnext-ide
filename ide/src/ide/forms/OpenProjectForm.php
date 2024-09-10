@@ -304,18 +304,29 @@ class OpenProjectForm extends AbstractIdeForm
                 /** @var File $project */
                 $config = ProjectConfig::createForFile($project);
                 $template = $config->getTemplate();
+                $template->setPathProject(fs::parent($project->getPath()));
+                //var_dump($template->getIconBase64().' jsaodoijsaiuopdiuopsauioduioasuoipdouiasoiudoupisaoui213uiop12u3ioui12o3uio12poui');
+
                 $name = str::lower(fs::nameNoExt($project->getName()));
 
                 if ($searchText && !str::contains($name, $searchText)) {
                     continue;
                 }
-
-                uiLater(function () use ($project, $template) {
-                    $one = new ImageBox(72, 48);
+                $image = $template->getIcon32();
+                var_dump($image .' ssss');
+                uiLater(function () use ($project, $template, $image) {
+                    $one = new ImageBox(48,48);
                     $one->data('file', $project);
                     $one->data('name', fs::pathNoExt($project->getName()));
                     $one->setTitle(fs::pathNoExt($project->getName()));
-                    $one->setImage(Ide::get()->getImage($template ? $template->getIcon32() : 'icons/question32.png')->image);
+
+
+                    if ($image != null){
+                        $one->setImage($image);
+                    }else{
+                        $one->setImage(Ide::get()->getImage('icons/question32.png')->image);
+                    }
+
                     $one->setTooltip(fs::nameNoExt($project->getName()));
 
                     $one->on('click', function (UXMouseEvent $e) {

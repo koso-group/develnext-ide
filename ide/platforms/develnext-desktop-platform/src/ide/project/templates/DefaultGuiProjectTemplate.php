@@ -3,6 +3,8 @@ namespace ide\project\templates;
 
 use ide\editors\FormEditor;
 use ide\formats\templates\JPPMPackageFileTemplate;
+use ide\Ide;
+use ide\Logger;
 use ide\project\AbstractProjectTemplate;
 use ide\project\behaviours\BackupProjectBehaviour;
 use ide\project\behaviours\BundleProjectBehaviour;
@@ -15,6 +17,9 @@ use ide\project\supports\JPPMProjectSupport;
 use ide\systems\FileSystem;
 use ide\utils\FileUtils;
 use ide\utils\Json;
+use php\gui\UXImage;
+use php\io\IOException;
+use php\io\MemoryStream;
 use php\lib\fs;
 use php\lib\str;
 
@@ -36,12 +41,7 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
 
     public function getIcon()
     {
-        return 'icons/program16.png';
-    }
-
-    public function getIcon32()
-    {
-        return 'icons/programEx32.png';
+        return 'res://.data/img/icons/program16.png';
     }
 
     public function getSupportContext(): string

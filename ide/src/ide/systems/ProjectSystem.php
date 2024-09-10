@@ -402,9 +402,18 @@ class ProjectSystem
             Ide::get()->trigger('closeProject', [$project]);
         }
 
-        if ($project) {
-            $project->save();
-        }
+        $thead = new Thread(function () use ($project) {
+            if ($project) {
+                $project->save();
+
+            }
+
+        });
+
+        $thead->join();
+
+
+
 
         foreach (FileSystem::getOpened() as $hash => $info) {
             //if ($project && $project->isContainsFile($info['file'])) {

@@ -246,7 +246,7 @@ class BundlesProjectControlPane extends AbstractProjectControlPane
 
     private function makeItemUi(IdeLibraryBundleResource $resource)
     {
-        $item = new ImageBox(92, 52);
+        $item = new ImageBox(48, 48);
         $item->setImage(Ide::getImage($resource->getIcon())->image);
         $item->setTitle($resource->getName() . ' ' . $resource->getVersion());
         $item->setTooltip($resource->getDescription());

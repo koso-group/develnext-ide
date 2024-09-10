@@ -4,6 +4,7 @@ use ide\ui\elements\DNLabel;
 use ide\utils\UiUtils;
 use php\gui\UXImageArea;
 use php\gui\layout\UXVBox;
+use php\gui\UXImageView;
 use php\gui\UXLabelEx;
 use php\gui\UXImage;
 use behaviour\StreamLoadableBehaviour;
@@ -16,9 +17,9 @@ use php\io\Stream;
 class ImageBox extends UXVBox implements StreamLoadableBehaviour
 {
     /**
-     * @var UXImageArea
+     * @var UXImageView
      */
-    protected $imageArea;
+    protected $imageView;
 
     /**
      * @var UXLabelEx
@@ -38,7 +39,7 @@ class ImageBox extends UXVBox implements StreamLoadableBehaviour
 
         $this->alignment = 'TOP_CENTER';
 
-        $item = new UXImageArea();
+        $item = new UXImageView();
         $item->size = [$width, $height];
 
         $item->centered = true;
@@ -47,7 +48,7 @@ class ImageBox extends UXVBox implements StreamLoadableBehaviour
         $item->proportional = true;
 
         $this->add($item);
-        $this->imageArea = $item;
+        $this->imageView = $item;
 
         $nameLabel = new DNLabel();
         $nameLabel->textAlignment = 'CENTER';
@@ -74,12 +75,12 @@ class ImageBox extends UXVBox implements StreamLoadableBehaviour
 
     public function setImage(UXImage $image = null)
     {
-        $this->imageArea->image = $image;
+        $this->imageView->image = $image;
     }
 
     public function getImage()
     {
-        return $this->imageArea->image;
+        return $this->imageView->image;
     }
 
     public function setTitle($title, $style = '')
@@ -109,7 +110,7 @@ class ImageBox extends UXVBox implements StreamLoadableBehaviour
      */
     function applyContentToObject($content)
     {
-        $this->imageArea->image = $content;
+        $this->imageView->image = $content;
     }
 
     /**
