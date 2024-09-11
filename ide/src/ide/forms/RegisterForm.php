@@ -49,24 +49,6 @@ class RegisterForm extends AbstractOnlineIdeForm
     }
 
     /**
-     * @event confirmLink.action
-     */
-    public function confirm()
-    {
-        $dialog = new RegisterConfirmForm();
-        $dialog->setEmail($this->emailField->text);
-
-        if ($dialog->showDialog() && $dialog->getResult()) {
-            Ide::accountManager()->setAccessToken($dialog->getResult());
-            $this->hide();
-            Ide::accountManager()->updateAccount();
-
-            $this->setResult(true);
-            $this->hide();
-        }
-    }
-
-    /**
      * @event cancelButton.action
      */
     public function actionCancel()
@@ -124,17 +106,15 @@ class RegisterForm extends AbstractOnlineIdeForm
 
                     $this->hidePreloader();
 
-                    if ($response->data() === 'RegisterConfirm') {
-                        $this->confirm();
-                    }
-
                     return;
                 }
 
                 Notifications::show('Спасибо за регистрацию', $response->message());
 
-                $this->confirm();
+                Ide::accountManager()->setAccessToken($response->result('xToken'));
+                Ide::accountManager()->updateAccount();
                 $this->hidePreloader();
+                $this->hide();
             }
         );
     }

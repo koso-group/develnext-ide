@@ -68,7 +68,7 @@ class LoginForm extends AbstractOnlineIdeForm
                         }
                     }
 
-                    Ide::accountManager()->setAccessToken($response->result('id'));
+                    Ide::accountManager()->setAccessToken($response->result('xToken'));
                     $this->hide();
                 } else {
                     $message = $response->message();
