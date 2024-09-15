@@ -1,6 +1,10 @@
 <?php
 namespace ide\forms;
 
+use clover\platform\facades\PluginManager;
+use clover\platform\plugins\CloverPlugin;
+use clover\platform\plugins\traits\ProjectTemplate;
+
 use ide\editors\menu\ContextMenu;
 use ide\forms\mixins\DialogFormMixin;
 use ide\forms\mixins\SavableFormMixin;
@@ -119,6 +123,12 @@ class NewProjectForm extends AbstractIdeForm
     public function doShow()
     {
         $templates = Ide::get()->getProjectTemplates();
+
+        PluginManager::forTrait(ProjectTemplate::class, function(CloverPlugin $plugin) use (&$templates)
+        {
+            $templates = array_merge($templates, $plugin->getProjectTemplates());
+        });
+
         $this->templates = Items::toArray($templates);
 
         $this->templateList->items->clear();
