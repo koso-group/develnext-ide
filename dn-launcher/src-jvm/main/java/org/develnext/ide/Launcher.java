@@ -59,7 +59,7 @@ public class Launcher {
         return new Version(System.getProperty("java.version").replace("_", ".")).compareTo(new Version("11.0.0")) == 1;
     }
 
-    public void start() throws URISyntaxException, IOException, InterruptedException {
+    public void start(String[] arguments) throws URISyntaxException, IOException, InterruptedException {
         if (!isValidJava()) {
             JOptionPane.showMessageDialog(null, "Open Java Runtime 11+ required", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -141,6 +141,8 @@ public class Launcher {
                 "-Ddevelnext.path=" + rootDir.getAbsolutePath(), "org.develnext.jphp.ext.javafx.FXLauncher"
         });
 
+        args = concatArrays(args, arguments);
+
         System.out.println(join(args, " "));
 
         processBuilder = new ProcessBuilder(args);
@@ -149,7 +151,7 @@ public class Launcher {
     }
 
     public static void main(String[] args) throws URISyntaxException, IOException, InterruptedException {
-        new Launcher().start();
+        new Launcher().start(args);
     }
 
     public static String join(Object[] array, String separator, int startIndex, int endIndex) {
