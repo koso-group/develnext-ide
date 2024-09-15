@@ -2,30 +2,39 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "DevelNext"
-#define MyAppVersion "17.0.0 (Spring)"
-#define MyAppPublisher "develnext.org"
-#define MyAppURL "http://develnext.org"
+#define MyAppVersion "2024.09"
+#define MyAppPublisher "FXE"
+#define MyAppURL "https://dn-fxe.ru/"
 #define MyAppExeName "DevelNext.exe"
 
 [Setup]
-; NOTE: The value of AppId uniquely identifies this application.
-; Do not use the same AppId value in installers for other applications.
+; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{d23f773d-6fff-48b5-855d-50069c307eae}
+AppId={{28678044-AB62-42A3-ACCE-975B00552EB6}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
+;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\{#MyAppName} 17
-DefaultGroupName=DevelNext IDE
-OutputDir=../build/distributions/
-OutputBaseFilename=DevelNextSetup
-Compression=lzma2/normal
-SolidCompression=no
-WizardImageFile=wizardImage.bmp
-ChangesAssociations=yes
+DefaultDirName={autopf}\DevelNext 2024.09
+; "ArchitecturesAllowed=x64compatible" specifies that Setup cannot run
+; on anything but x64 and Windows 11 on Arm.
+ArchitecturesAllowed=x64compatible
+; "ArchitecturesInstallIn64BitMode=x64compatible" requests that the
+; install be done in "64-bit mode" on x64 or Windows 11 on Arm,
+; meaning it should use the native 64-bit Program Files directory and
+; the 64-bit view of the registry.
+ArchitecturesInstallIn64BitMode=x64compatible
+DisableProgramGroupPage=yes
+; Uncomment the following line to run in non administrative install mode (install for current user only.)
+;PrivilegesRequired=lowest
+PrivilegesRequiredOverridesAllowed=dialog
+OutputBaseFilename=mysetup
+Compression=lzma
+SolidCompression=yes
+WizardStyle=modern
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -36,22 +45,16 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "../build/install/develnext/DevelNext.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "../build/install/develnext/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\build_*\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
-[InstallDelete]
-Type: files; Name: "{app}/lib/*"
-Type: filesandordirs; Name: "{app}/library/*"
-
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
+Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+
 
 [Registry]
 Root: HKCR; Subkey: "develnext"; ValueType: "string"; ValueData: "URL:DevelNext Protocol"; Flags: uninsdeletekey
@@ -64,6 +67,3 @@ Root: HKCR; Subkey: ".dnproject"; ValueData: "DevelNext"; Flags: uninsdeletevalu
 Root: HKCR; Subkey: "{#MyAppName}"; ValueData: "DevelNext Project"; Flags: uninsdeletekey; ValueType: string;  ValueName: ""
 Root: HKCR; Subkey: "{#MyAppName}\DefaultIcon"; ValueData: "{app}\projectExtension.ico"; ValueType: string;  ValueName: ""
 Root: HKCR; Subkey: "{#MyAppName}\shell\open\command"; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; ValueType: string;  ValueName: ""
-
-
-

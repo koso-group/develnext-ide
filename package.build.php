@@ -141,22 +141,29 @@ function task_fetchMessages($e)
  */
 function task_buildIde(Event $e)
 {
-    fs::makeDir("./tools/build/jre/");
-
     Tasks::runExternal("./ide", "install");
+    Tasks::runExternal("./ide", "update");
+    Tasks::runExternal("./ide", "build");
+    Tasks::runExternal('./ide', 'copySourcesToBuild', $e->args());
+    Tasks::runExternal('./ide', 'moveAppArtifactToLibs', $e->args());
 
-    Tasks::copy("./ide/vendor", "./ide/build/vendor/");
+
     Tasks::copy('./ide/misc', './ide/build/');
 
+
+    
+    
     Tasks::deleteFile('./dn-launcher/build');
-    Tasks::runExternal('./dn-launcher', 'build', $e->args());
     Tasks::deleteFile("./ide/build/DevelNext.jar");
+    Tasks::runExternal('./dn-launcher', 'build', $e->args());
     Tasks::copy('./dn-launcher/build/DevelNext.jar', './ide/build');
     Tasks::copy('./dn-launcher/build/libs/', './ide/build/libs/');
-    Tasks::runExternal('./ide', 'copySourcesToBuild', $e->args());
+    
+
 
     $os = Package::getOS();
-
+    
+    fs::makeDir("./tools/build/jre/");
     $jreLink = $e->package()->getAny("jdk.$os.url");
     $jrePath = "./tools/build/jre/" . fs::name($jreLink);
 
