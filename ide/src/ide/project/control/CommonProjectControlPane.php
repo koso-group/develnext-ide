@@ -215,27 +215,41 @@ class CommonProjectControlPane extends AbstractProjectControlPane
     public function doSelectIconButton()
     {
         $fileChooser = new FileChooserScript();
-        //to-do add check ext
+        $fileChooser->filterExtensions = '*.png*,*.jpg*,*.gif*';
+
         $file = $fileChooser->execute();
 
         if ($file != null){
-            (new Thread(function () use ($file) {
+            Ide::get()->getMainForm()->showPreloader('Установка иконки проекта...');
+            $thread = new Thread(function () use ($file) {
+                waitAsync(3500,function (){
+                    Ide::get()->getMainForm()->hidePreloader();
+                });
+
                 $byte = file_get_contents($file->getAbsolutePath());
                 $base64 = base64_encode($byte);
 
                 $configProject = Ide::get()->getOpenedProject()->getConfig();
                 $configProject->setIconProjectBase64($base64);
+
                 $configProject->save();
+
+
                 $mem = new MemoryStream();
+
                 $mem->write($byte);
                 $mem->seek(0);
+
                 $image = new UXImage($mem);
 
+                $this->iconImageView->image = null;
+                $this->iconImageView->image = $image;
 
-                    $this->iconImageView->image = $image;
 
 
-            }))->start();
+            });
+
+            $thread->start();
 
 
         }else{

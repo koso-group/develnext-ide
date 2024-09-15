@@ -313,7 +313,7 @@ class OpenProjectForm extends AbstractIdeForm
                     continue;
                 }
                 $image = $template->getIcon32();
-                var_dump($image .' ssss');
+
                 uiLater(function () use ($project, $template, $image) {
                     $one = new ImageBox(48,48);
                     $one->data('file', $project);

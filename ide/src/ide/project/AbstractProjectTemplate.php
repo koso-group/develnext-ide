@@ -86,7 +86,6 @@ abstract class AbstractProjectTemplate
 
     public function getIconBase64()
     {
-    var_dump($this->pathProject . '  312sadf3ilessssssssssssssssssss');
         if ($this->pathProject != null){
 
             if (fs::exists($this->pathProject)) {
@@ -94,7 +93,6 @@ abstract class AbstractProjectTemplate
 
                 foreach ($exts as $file) {
                     if (fs::ext($file) == 'dnproject') {
-                        var_dump($file . '  filesssssssssssssssssssssssssssssssssssssssssss31');
                         $projectConfig = new ProjectConfig($this->pathProject, fs::nameNoExt($file));
                         return $projectConfig->getIconProjectBase64();
                     }
