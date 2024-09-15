@@ -18,6 +18,7 @@ settings.xml
 /.gradle/
 
 build/
+build_*
 
 gradle.properties
 secret.asc
